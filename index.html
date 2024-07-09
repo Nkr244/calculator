@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Калькулятор</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+<div id="app" class="container">
+    <form class="form">
+        <div class="form-section">
+            <div class="form-item">
+                <label class="view">
+                    <select name="view" v-model="view">
+                        <option value="default">Выберите вид бара или услугу</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                </label>
+
+            </div>
+        </div>
+        <div class="form-section">
+            <label class="form-item">
+                <span>Колличество гостей</span>
+                <input type="number" placeholder="Например, 90" v-model.number="a">
+            </label>
+            <label class="form-item">
+                <span>Количество напитков на одного гостя</span>
+                <input type="number" placeholder="Например, 2" v-model.number="b">
+            </label>
+        </div>
+        <div class="form-section price">
+            Стоимость, руб. <span>{{count}}</span>
+        </div>
+        <div class="form-section">
+            <label class="form-item">
+                <span>Имя</span>
+                <input type="text" placeholder="Ваше имя">
+            </label>
+            <label class="form-item">
+                <span>Телефон</span>
+                <input type="tel" placeholder="+7 999 999 99 99">
+            </label>
+            <label class="form-item">
+                <span>Email</span>
+                <input type="email" placeholder="Ваш email">
+            </label>
+        </div>
+        <div class="form-section">
+            <button type="submit">Получить смету</button>
+        </div>
+
+    </form>
+</div>
+</body>
+<script>
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                view: "default",
+                a: null,
+                b: null,
+            };
+        },
+        computed: {
+            count() {
+                if (this.view === "default" || !this.a || !this.b) {
+                    return 0;
+                }
+
+                let drinkPrice = 0;
+                switch (this.view) {
+                    case "A":
+                        drinkPrice = 800;
+                        break;
+                    case "B":
+                        drinkPrice = 700;
+                        break;
+                    case "C":
+                        drinkPrice = 600;
+                        break;
+                }
+
+                const guestCount = this.a;
+                const drinksPerGuest = this.b;
+
+                const drinksCost = guestCount * drinksPerGuest * drinkPrice;
+
+                let bartenderCost = 0;
+                if (guestCount < 30) {
+                    bartenderCost = 10000;
+                } else if (guestCount < 70) {
+                    bartenderCost = 20000;
+                } else if (guestCount < 120) {
+                    bartenderCost = 30000;
+                } else {
+                    bartenderCost = 40000;
+                }
+
+                let logisticsCost = 0;
+                if (guestCount < 70) {
+                    logisticsCost = 10000;
+                } else if (guestCount < 100) {
+                    logisticsCost = 15000;
+                } else {
+                    logisticsCost = 20000;
+                }
+
+                let dishwareCost = 0;
+                if (guestCount < 30) {
+                    dishwareCost = 5000;
+                } else if (guestCount < 70) {
+                    dishwareCost = 15000;
+                } else if (guestCount < 120) {
+                    dishwareCost = 20000;
+                } else {
+                    dishwareCost = 30000;
+                }
+
+                let barStationCost = 0;
+                if (guestCount <= 70) {
+                    barStationCost = 20000;
+                } else if (guestCount <= 120) {
+                    barStationCost = 40000;
+                } else {
+                    barStationCost = 60000;
+                }
+
+                return drinksCost + bartenderCost + logisticsCost + dishwareCost + barStationCost;
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>
