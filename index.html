@@ -8,7 +8,7 @@
 </head>
 <body>
 <div id="app" class="container">
-    <form class="form">
+    <form class="form" @submit.prevent="handleSubmit">
         <div class="form-section">
             <div class="form-item">
                 <label class="view">
@@ -132,6 +132,35 @@
                 }
 
                 return drinksCost + bartenderCost + logisticsCost + dishwareCost + barStationCost;
+            }
+        },
+        methods: {
+            handleSubmit() {
+                const formData = {
+                    view: this.view,
+                    guests: this.a,
+                    drinks: this.b,
+                    count: this.count,
+                    name: this.name,
+                    phone: this.phone,
+                    email: this.email
+                };
+
+                fetch('https://nkr244.github.io/calculator/webhook.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Обработка ответа от сервера
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error('Ошибка:', error);
+                    });
             }
         }
     }).mount('#app');
